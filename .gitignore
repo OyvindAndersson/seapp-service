@@ -1,0 +1,34 @@
+vendor/
+node_modules/
+npm-debug.log
+
+# Laravel 4 specific
+bootstrap/compiled.php
+app/storage/
+
+# Laravel 5 & Lumen specific
+public/storage
+public/hot
+storage/*.key
+.env.*.php
+.env.php
+.env
+Homestead.yaml
+Homestead.json
+
+# Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
+.rocketeer/
+Vagrantfile
+composer.lock
+aliases
+after.sh
+.vagrant/machines/se-app/virtualbox/vagrant_cwd
+.vagrant/machines/se-app/virtualbox/synced_folders
+.vagrant/machines/se-app/virtualbox/private_key
+.vagrant/machines/se-app/virtualbox/index_uuid
+.vagrant/machines/se-app/virtualbox/id
+.vagrant/machines/se-app/virtualbox/creator_uid
+.vagrant/machines/se-app/virtualbox/box_meta
+.vagrant/machines/se-app/virtualbox/action_set_name
+.vagrant/machines/se-app/virtualbox/action_provision
+.vscode/settings.json
