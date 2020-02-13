@@ -25,7 +25,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware('auth:api')->get('/products', 'ProductController@index');
 Route::middleware('auth:api')->post('/products', 'ProductController@store');
+/** Requires only changed fields */
+Route::middleware('auth:api')->patch('/product/{id}', 'ProductController@update');
 
+
+/*
+    Debug create product
+*/
 Route::middleware('auth:api')->get('/products/make', function(){
     $product = \DB::transaction( function() {
         $product = factory('App\Product')->create();
@@ -56,6 +62,4 @@ Route::middleware('auth:api')->get('/products/make', function(){
 
     return response()->json($product);
 });
-/*
 
-*/

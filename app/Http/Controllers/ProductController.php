@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Rules\AlphaNumSpecial;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -37,18 +38,6 @@ class ProductController extends ApiResponseController
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        
-
-        $resource = new Product(request()->all());
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request    $request
@@ -80,29 +69,7 @@ class ProductController extends ApiResponseController
 
         $resource->save();
 
-        return $resource;
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int                         $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $resource = Product::findOrFail($id);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int                         $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $resource = Product::findOrFail($id);
+        return $this->sendResponse($resource);
     }
 
     /**
@@ -114,7 +81,22 @@ class ProductController extends ApiResponseController
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, []);
+        $validator = Validator::make($request->all(), [
+            'code' => ['string', 'unique:products', new AlphaNumSpecial],
+            'ean' => ['string', 'unique:products', new AlphaNumSpecial],
+            'name' => ['string', 'min:3', 'max:64', new AlphaNumSpecial],
+            'description' => ['string', 'max:1024', new AlphaNumSpecial],
+            'product_group_id' => 'integer|exists:product_groups,id',
+            'image_file_id' => 'integer|exists:files,id',
+            'supplier_id' => 'integer|exists:suppliers,id',
+            'primary_price_id' => 'integer|exists:product_prices,id',
+
+            // todo: Prices relation
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError($validator->errors());       
+        }
 
         $resource = Product::findOrFail($id);
 
@@ -123,6 +105,8 @@ class ProductController extends ApiResponseController
         $resource->fill($data);
 
         $resource->save();
+
+        return $this->sendResponse($resource);
     }
 
     /**
@@ -135,6 +119,8 @@ class ProductController extends ApiResponseController
     {
         $resource = Product::findOrFail($id);
 
-        $resource->delete();
+        $result = $resource->delete();
+
+        return $this->sendResponse($result);
     }
 }
